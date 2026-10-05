@@ -22,6 +22,10 @@ const bikeId = document.querySelector("#bikeId");
 const inquiryForm = document.querySelector("#inquiryForm");
 const formStatus = document.querySelector("#formStatus");
 const savedCount = document.querySelector("#savedCount");
+const serviceStatus = document.querySelector("#serviceStatus");
+const reviewsList = document.querySelector("#reviewsList");
+const offersList = document.querySelector("#offersList");
+const workshopList = document.querySelector("#workshopList");
 
 function updateSavedCount() {
   savedCount.textContent = state.saved.size;
@@ -77,6 +81,66 @@ async function loadBikes(params = new URLSearchParams(new FormData(filters))) {
   bikeGrid.innerHTML = state.bikes.length
     ? state.bikes.map(bikeCard).join("")
     : `<div class="bike-card"><div class="bike-body"><h3>No bikes found</h3><p>Try another riding style or price range.</p></div></div>`;
+}
+
+async function loadJson(url) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Request failed: ${url}`);
+  }
+  return response.json();
+}
+
+function renderReviews(reviews) {
+  reviewsList.innerHTML = reviews.map(review => `
+    <div class="service-item">
+      <strong>${review.rating}/5 ${review.name}</strong>
+      <span>${review.bike}</span>
+      <p>${review.comment}</p>
+    </div>
+  `).join("");
+}
+
+function renderOffers(offers) {
+  offersList.innerHTML = offers.map(offer => `
+    <div class="service-item">
+      <strong>${offer.title}</strong>
+      <span>${offer.value}</span>
+      <p>${offer.detail}</p>
+    </div>
+  `).join("");
+}
+
+function renderWorkshop(slots) {
+  workshopList.innerHTML = slots.map(slot => `
+    <div class="service-item">
+      <strong>${slot.day}</strong>
+      <span>${slot.window}</span>
+      <p>${slot.service}</p>
+    </div>
+  `).join("");
+}
+
+async function loadServiceData() {
+  try {
+    const [health, reviews, offers, workshop] = await Promise.all([
+      loadJson("/api/health"),
+      loadJson("/api/reviews"),
+      loadJson("/api/offers"),
+      loadJson("/api/workshop-slots")
+    ]);
+
+    const running = health.dependencies.filter(item => item.status === "ok").length;
+    serviceStatus.textContent = `${running}/${health.dependencies.length} services online`;
+    renderReviews(reviews.reviews);
+    renderOffers(offers.offers);
+    renderWorkshop(workshop.slots);
+  } catch (error) {
+    serviceStatus.textContent = "Service data unavailable";
+    reviewsList.innerHTML = `<p class="service-error">Start the compose services to load reviews.</p>`;
+    offersList.innerHTML = `<p class="service-error">Start the compose services to load offers.</p>`;
+    workshopList.innerHTML = `<p class="service-error">Start the compose services to load workshop slots.</p>`;
+  }
 }
 
 function openDrawer(id) {
@@ -179,3 +243,4 @@ document.querySelector("#openSaved").addEventListener("click", () => {
 updateSavedCount();
 loadStats();
 loadBikes();
+loadServiceData();

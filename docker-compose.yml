@@ -1,0 +1,41 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: velomarket-web:v1.0.0
+    container_name: velomarket-web
+    ports:
+      - "8080:3000"
+    environment:
+      REVIEWS_SERVICE_URL: http://reviews-service:3001
+      OFFERS_SERVICE_URL: http://offers-service:3002
+      WORKSHOP_SERVICE_URL: http://workshop-service:3003
+    depends_on:
+      - reviews-service
+      - offers-service
+      - workshop-service
+
+  reviews-service:
+    build:
+      context: ./services/reviews-service
+    image: velomarket-reviews:v1.0.0
+    container_name: velomarket-reviews
+    expose:
+      - "3001"
+
+  offers-service:
+    build:
+      context: ./services/offers-service
+    image: velomarket-offers:v1.0.0
+    container_name: velomarket-offers
+    expose:
+      - "3002"
+
+  workshop-service:
+    build:
+      context: ./services/workshop-service
+    image: velomarket-workshop:v1.0.0
+    container_name: velomarket-workshop
+    expose:
+      - "3003"

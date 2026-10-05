@@ -15,6 +15,7 @@
     <nav class="nav" aria-label="Primary navigation">
       <a href="#inventory">Inventory</a>
       <a href="#fit">Fit guide</a>
+      <a href="#services">Services</a>
       <a href="#contact">Contact</a>
     </nav>
     <button class="ghost-button" id="openSaved" type="button">Saved <span id="savedCount">0</span></button>
@@ -118,6 +119,30 @@
         <article><strong>Adventure</strong><span>Gravel and bikepacking</span></article>
         <article><strong>Trails</strong><span>Mountain suspension</span></article>
         <article><strong>Commute</strong><span>Electric and folding bikes</span></article>
+      </div>
+    </section>
+
+    <section class="services-section" id="services">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Compose services</p>
+          <h2>Marketplace data comes from multiple containers</h2>
+        </div>
+        <p id="serviceStatus">Checking services...</p>
+      </div>
+      <div class="service-grid">
+        <article>
+          <span class="service-label">Reviews service</span>
+          <div id="reviewsList" class="service-list"></div>
+        </article>
+        <article>
+          <span class="service-label">Offers service</span>
+          <div id="offersList" class="service-list"></div>
+        </article>
+        <article>
+          <span class="service-label">Workshop service</span>
+          <div id="workshopList" class="service-list"></div>
+        </article>
       </div>
     </section>
   </main>

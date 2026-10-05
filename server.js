@@ -4,6 +4,9 @@ const path = require("path");
 
 const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = path.join(__dirname, "public");
+const REVIEWS_SERVICE_URL = process.env.REVIEWS_SERVICE_URL || "http://localhost:3001";
+const OFFERS_SERVICE_URL = process.env.OFFERS_SERVICE_URL || "http://localhost:3002";
+const WORKSHOP_SERVICE_URL = process.env.WORKSHOP_SERVICE_URL || "http://localhost:3003";
 
 const bikes = [
   {
@@ -146,6 +149,40 @@ function filterBikes(requestUrl) {
   });
 }
 
+async function fetchServiceJson(baseUrl, endpoint) {
+  const response = await fetch(`${baseUrl}${endpoint}`);
+  if (!response.ok) {
+    throw new Error(`Service request failed with status ${response.status}`);
+  }
+  return response.json();
+}
+
+async function serviceStatus() {
+  const checks = [
+    ["reviews-service", REVIEWS_SERVICE_URL],
+    ["offers-service", OFFERS_SERVICE_URL],
+    ["workshop-service", WORKSHOP_SERVICE_URL]
+  ];
+
+  const results = await Promise.allSettled(
+    checks.map(async ([name, url]) => ({
+      name,
+      ...(await fetchServiceJson(url, "/health"))
+    }))
+  );
+
+  return results.map((result, index) => {
+    if (result.status === "fulfilled") {
+      return result.value;
+    }
+
+    return {
+      name: checks[index][0],
+      status: "unavailable"
+    };
+  });
+}
+
 function serveStatic(req, res) {
   const rawPath = req.url === "/" ? "/index.html" : req.url.split("?")[0];
   const safePath = path.normalize(rawPath).replace(/^(\.\.[/\\])+/, "");
@@ -172,8 +209,44 @@ function serveStatic(req, res) {
 }
 
 const server = http.createServer(async (req, res) => {
+  if (req.method === "GET" && req.url === "/api/health") {
+    sendJson(res, 200, {
+      service: "web",
+      status: "ok",
+      dependencies: await serviceStatus()
+    });
+    return;
+  }
+
   if (req.method === "GET" && req.url.startsWith("/api/bikes")) {
     sendJson(res, 200, { bikes: filterBikes(req.url) });
+    return;
+  }
+
+  if (req.method === "GET" && req.url === "/api/reviews") {
+    try {
+      sendJson(res, 200, await fetchServiceJson(REVIEWS_SERVICE_URL, "/reviews"));
+    } catch (error) {
+      sendJson(res, 502, { error: "Reviews service is unavailable." });
+    }
+    return;
+  }
+
+  if (req.method === "GET" && req.url === "/api/offers") {
+    try {
+      sendJson(res, 200, await fetchServiceJson(OFFERS_SERVICE_URL, "/offers"));
+    } catch (error) {
+      sendJson(res, 502, { error: "Offers service is unavailable." });
+    }
+    return;
+  }
+
+  if (req.method === "GET" && req.url === "/api/workshop-slots") {
+    try {
+      sendJson(res, 200, await fetchServiceJson(WORKSHOP_SERVICE_URL, "/slots"));
+    } catch (error) {
+      sendJson(res, 502, { error: "Workshop service is unavailable." });
+    }
     return;
   }
 

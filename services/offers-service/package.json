@@ -1,0 +1,10 @@
+{
+  "name": "velomarket-offers-service",
+  "version": "1.0.0",
+  "description": "Bike offer service for the VeloMarket compose project.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "MIT"
+}
