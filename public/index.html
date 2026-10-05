@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VeloMarket</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="VeloMarket home">
+      <span class="brand-mark">V</span>
+      <span>VeloMarket</span>
+    </a>
+    <nav class="nav" aria-label="Primary navigation">
+      <a href="#inventory">Inventory</a>
+      <a href="#fit">Fit guide</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="ghost-button" id="openSaved" type="button">Saved <span id="savedCount">0</span></button>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Premium bikes, ready to ride</p>
+        <h1>Find your next ride with confidence.</h1>
+        <p class="hero-text">Shop road, mountain, gravel, electric and folding bikes with live filters, saved picks and quick advisor requests.</p>
+        <div class="hero-actions">
+          <a class="primary-button" href="#inventory">Browse bikes</a>
+          <a class="secondary-button" href="#fit">Find your fit</a>
+        </div>
+      </div>
+      <form class="search-panel" id="quickSearch">
+        <label for="heroSearch">Search brand, model or city</label>
+        <input id="heroSearch" name="search" type="search" placeholder="Canyon, gravel, Douala">
+        <div class="search-row">
+          <select name="type" aria-label="Bike type">
+            <option value="all">All types</option>
+            <option value="Road">Road</option>
+            <option value="Mountain">Mountain</option>
+            <option value="Electric">Electric</option>
+            <option value="Gravel">Gravel</option>
+            <option value="Folding">Folding</option>
+          </select>
+          <select name="frame" aria-label="Frame material">
+            <option value="all">All frames</option>
+            <option value="Carbon">Carbon</option>
+            <option value="Aluminum">Aluminum</option>
+            <option value="Steel">Steel</option>
+          </select>
+        </div>
+        <button class="primary-button full" type="submit">Search bikes</button>
+      </form>
+    </section>
+
+    <section class="stats-band" aria-label="Marketplace statistics">
+      <article>
+        <strong id="totalBikes">0</strong>
+        <span>bikes available</span>
+      </article>
+      <article>
+        <strong id="averagePrice">$0</strong>
+        <span>average price</span>
+      </article>
+      <article>
+        <strong id="categories">0</strong>
+        <span>bike categories</span>
+      </article>
+      <article>
+        <strong>24h</strong>
+        <span>advisor response</span>
+      </article>
+    </section>
+
+    <section class="inventory-section" id="inventory">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Live inventory</p>
+          <h2>Featured bikes for every riding style</h2>
+        </div>
+        <p id="resultCount">Loading bikes...</p>
+      </div>
+
+      <form class="filters" id="filters">
+        <input name="search" type="search" placeholder="Search bikes">
+        <select name="type">
+          <option value="all">All types</option>
+          <option value="Road">Road</option>
+          <option value="Mountain">Mountain</option>
+          <option value="Electric">Electric</option>
+          <option value="Gravel">Gravel</option>
+          <option value="Folding">Folding</option>
+        </select>
+        <select name="frame">
+          <option value="all">All frames</option>
+          <option value="Carbon">Carbon</option>
+          <option value="Aluminum">Aluminum</option>
+          <option value="Steel">Steel</option>
+        </select>
+        <label class="range-label">
+          Max price <span id="maxPriceLabel">$7,000</span>
+          <input name="maxPrice" id="maxPrice" type="range" min="1000" max="7000" step="250" value="7000">
+        </label>
+      </form>
+
+      <div class="bike-grid" id="bikeGrid"></div>
+    </section>
+
+    <section class="fit-section" id="fit">
+      <div>
+        <p class="eyebrow">Fit guide</p>
+        <h2>Choose the bike that matches how you ride.</h2>
+        <p>Road bikes favor speed, mountain bikes handle rough trails, gravel bikes mix comfort and adventure, and electric bikes make commuting easier.</p>
+      </div>
+      <div class="fit-list">
+        <article><strong>Speed</strong><span>Road and aero frames</span></article>
+        <article><strong>Adventure</strong><span>Gravel and bikepacking</span></article>
+        <article><strong>Trails</strong><span>Mountain suspension</span></article>
+        <article><strong>Commute</strong><span>Electric and folding bikes</span></article>
+      </div>
+    </section>
+  </main>
+
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-panel">
+      <button class="close-button" id="closeDrawer" type="button" aria-label="Close request form">x</button>
+      <p class="eyebrow">Bike request</p>
+      <h2 id="drawerTitle">Talk to an advisor</h2>
+      <form id="inquiryForm">
+        <input type="hidden" name="bikeId" id="bikeId">
+        <label>Your name
+          <input name="name" required placeholder="Full name">
+        </label>
+        <label>Phone number
+          <input name="phone" required placeholder="+237 ...">
+        </label>
+        <label>Message
+          <textarea name="message" rows="4" placeholder="I want to inspect this bike."></textarea>
+        </label>
+        <button class="primary-button full" type="submit">Send request</button>
+        <p class="form-status" id="formStatus"></p>
+      </form>
+    </div>
+  </aside>
+
+  <footer class="footer" id="contact">
+    <div>
+      <strong>VeloMarket</strong>
+      <p>Dynamic bike marketplace built for Docker deployment practice.</p>
+    </div>
+    <a href="mailto:sales@velomarket.example">sales@velomarket.example</a>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>
