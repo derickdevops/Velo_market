@@ -1,0 +1,10 @@
+{
+  "name": "velomarket-bike-sales",
+  "version": "1.0.0",
+  "description": "Dynamic bike sales website deployed with Docker.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "MIT"
+}
